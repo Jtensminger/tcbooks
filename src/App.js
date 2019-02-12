@@ -1,28 +1,119 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Switch} from "react-router-dom"
+import ApolloClient from "apollo-boost"
+import { ApolloProvider } from "react-apollo"
+import Header from "./header"
+import Tcbooks from "./tcbooks"
+import Tcbook from "./tcbook"
+import SEO from "./seo"
+import Callback from "./callback"
+import Error from "./error"
+import ConsumerContext from "./provider"
+import Profile from "./components/profile"
+import Home from "./components/home"
+import styled from 'styled-components';
+// import '@atlaskit/css-reset';
 import './App.css';
 
+const client = new ApolloClient({
+  uri: 'https://api-uswest.graphcms.com/v1/cjrmslxs03j1n01htiaisw9d9/master',
+  headers: {authorization: `Bearer ${process.env.REACT_APP_GRAPHCMS}`}
+})
+
+const ContentWrapper = styled.div`
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+`;
+
+const AppWrapper = styled.div`
+  background: ${props => props.theme.bg};
+  color: ${props => props.theme.fg};
+`
+
+const light = {
+  fg: "#283447",
+  bg: "#fefefe"
+};
+
+const dark = {
+  fg: "#fefefe",
+  bg: "#283447"
+}
+
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      authenticated: null,
+      themeMode: props.tokens.mode
+    }
+  }
+
+  switchTheme = () => {
+    const { themeMode } = this.state;
+    this.setState({
+      themeMode: themeMode === 'light' ? 'dark' : 'light',
+    });
+  }
+
+  loginVerification = () => {
+    const { renewSession, isAuthenticated } = this.props.auth
+
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      renewSession().then(() => {
+      if(this.state.authenticated !== isAuthenticated()) {
+        this.setState({authenticated: isAuthenticated()})
+      }
+    })
+    } else if (this.state.authenticated !== isAuthenticated()) {
+      this.setState({authenticated: isAuthenticated()})
+      }
+    }
+
+    compondentWillMount() {
+      this.loginVerification()
+    }
+
+    componentDidMount() {
+      this.loginVerification()
+    }
+
+    componentDidUpdate() {
+      this.loginVerification()
+    }
+
   render() {
+    const { themeMode } = this.state
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+        <Router>
+          <ApolloProvider client={client}>
+            <AppWrapper theme={themeMode === 'light' ? light : dark}>
+              <ConsumerContext>{ (context) => <Header context={context} auth={this.props.auth} themeMode={themeMode} switchTheme={this.switchTheme} />}</ConsumerContext>
+              <SEO title="Home" keywords={[`tradecraft`, `markdown`, `books`]} />
+              <ContentWrapper>
+                <div>
+                      <Switch>
+                        <Route exact path="/callback" render={() => <Callback handleAuthentication={this.props.auth.handleAuthentication}/>}/>
+                        <Route exact path="/books" render={() => <Tcbooks auth={this.props.auth} authenticated={this.state.authenticated}/>} />
+                        <Route exact path="/book/:id/:title" render={() => <Tcbook auth={this.props.auth} authenticated={this.state.authenticated}/>} />
+                        {this.state.authenticated && <Route exact path="/profile" component={() => <Profile auth={this.props.auth}/>} />}
+                        <Route exact path="/" render={() => <Home authenticated={this.state.authenticated} auth={this.props.auth}/>}/>
+                        <Route exact component={Error} />
+                      </Switch>
+                </div>
+              </ContentWrapper>
+            </AppWrapper>
+          </ApolloProvider>
+        </Router>
+    )
   }
 }
 
+// margin: `0 auto`,
+// maxWidth: 960,
+// padding: `0px 1.0875rem 1.45rem`,
+// paddingTop: 0,
 export default App;
