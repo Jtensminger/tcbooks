@@ -24,7 +24,7 @@ const HeaderWrapper = styled.div`
   text-align: center;
 `
 
-const Header = ({ context, auth, themeMode, switchTheme }) => (
+const Header = ({ context, auth, themeMode }) => (
   <header>
     <HeaderWrapper theme={themeMode === 'light' ? light : dark}>
       <h1 style={{ margin: 0 }}>

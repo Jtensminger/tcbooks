@@ -113,7 +113,7 @@ class TcbookMarkdownRenderer extends React.Component {
               {
                 author && <div>
                   <p style={{fontWeight: 'bold'}}>Other Books by {author.fullName}: </p>
-                  {this.otherBooksUI}
+                  {this.otherBooksUI()}
                 </div>
               }
           </Grid.Column>

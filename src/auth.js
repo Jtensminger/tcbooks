@@ -1,6 +1,4 @@
 import auth0 from 'auth0-js';
-//New
-import { BrowserRouter } from "react-router-dom"
 
 export default class Auth {
   //New
@@ -34,6 +32,7 @@ export default class Auth {
     this.getAccessToken = this.getAccessToken.bind(this);
     this.isAllowed = this.isAllowed.bind(this);
     this.hasRole = this.hasRole.bind(this);
+    this.hasGroup = this.hasGroup.bind(this);
     this.scheduleRenewal()
 
     this.setSession = this.setSession.bind(this);
@@ -76,9 +75,9 @@ export default class Auth {
     }
   }
 
-    getExpiryDate() {
-      return JSON.stringify(new Date(this.expiresAt));
-    }
+  getExpiryDate() {
+    return JSON.stringify(new Date(this.expiresAt));
+  }
 
   renewSession() {
     return new Promise((resolve, reject) => {

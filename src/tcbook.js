@@ -24,30 +24,7 @@ class Tcbook extends Component {
       }
     }
 
-    componentDidMount() {
-      if(this.props.authenticated) {
-        const { userProfile, getProfile } = this.props.auth;
-
-        if (!userProfile) {
-          getProfile((err, profile) => {
-            this.setState({ profile });
-          });
-        } else {
-          this.setState({ profile: userProfile });
-        }
-      } else {
-        this.setState({profile: null})
-      }
-    }
-
   render() {
-    const { profile } = this.state;
-    let groupAccess = null
-    if (profile) {
-      if (profile.groups) {
-        groupAccess = Object.values(profile.groups)
-      }
-    }
     return (
         <Query query={gql`
           {
@@ -71,7 +48,11 @@ class Tcbook extends Component {
           {({loading, error, data}) => {
             if (loading) return <p>Loading...</p>
             if (error) return <p>Error</p>
-            if (!this.props.auth.hasGroup(data.groupAccess)) return <p>You don't have the correct group permission to see this book</p>
+            if(!data.tcBook.groupAccess) return <TcbookMarkdownRenderer pathname={this.props.location.pathname} tcbook={data.tcBook} />
+            
+            if (!this.props.auth.profile) return <p>You don't have the correct group permission to see this book</p>
+            if (!this.props.auth.hasGroup([data.tcBook.groupAccess])) return <p>You don't have the correct group permission to see this book</p>
+
             return <TcbookMarkdownRenderer pathname={this.props.location.pathname} tcbook={data.tcBook} />
           }}
         </Query>

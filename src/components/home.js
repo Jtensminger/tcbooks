@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { Container, Header, Icon, Divider, Segment, Button } from "semantic-ui-react"
-import { withRouter, Redirect } from 'react-router-dom';
-import styled from 'styled-components';
 
 class Home extends Component {
 
   render() {
-    const { authenticated, location, auth } = this.props
-    if (authenticated) return <Redirect to={{pathname: "/books", state: { from: location }}} />
+    const { auth } = this.props
     return (
       <Container text>
         <Segment raised textAlign="center">
@@ -24,4 +21,4 @@ class Home extends Component {
   }
 }
 
-export default withRouter(Home)
+export default Home

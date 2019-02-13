@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch} from "react-router-dom"
+import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom"
 import ApolloClient from "apollo-boost"
 import { ApolloProvider } from "react-apollo"
+// import history from "./components/history"
 import Header from "./header"
 import Tcbooks from "./tcbooks"
 import Tcbook from "./tcbook"
@@ -43,6 +44,7 @@ const dark = {
   bg: "#283447"
 }
 
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -70,8 +72,8 @@ class App extends Component {
     })
     } else if (this.state.authenticated !== isAuthenticated()) {
       this.setState({authenticated: isAuthenticated()})
-      }
     }
+  }
 
     compondentWillMount() {
       this.loginVerification()
@@ -87,20 +89,30 @@ class App extends Component {
 
   render() {
     const { themeMode } = this.state
+    const { auth } = this.props
+
     return (
         <Router>
           <ApolloProvider client={client}>
             <AppWrapper theme={themeMode === 'light' ? light : dark}>
-              <ConsumerContext>{ (context) => <Header context={context} auth={this.props.auth} themeMode={themeMode} switchTheme={this.switchTheme} />}</ConsumerContext>
+              <ConsumerContext>{ (context) => <Header context={context} auth={auth} themeMode={themeMode} switchTheme={this.switchTheme} />}</ConsumerContext>
               <SEO title="Home" keywords={[`tradecraft`, `markdown`, `books`]} />
               <ContentWrapper>
                 <div>
                       <Switch>
-                        <Route exact path="/callback" render={() => <Callback handleAuthentication={this.props.auth.handleAuthentication}/>}/>
-                        <Route exact path="/books" render={() => <Tcbooks auth={this.props.auth} authenticated={this.state.authenticated}/>} />
-                        <Route exact path="/book/:id/:title" render={() => <Tcbook auth={this.props.auth} authenticated={this.state.authenticated}/>} />
-                        {this.state.authenticated && <Route exact path="/profile" component={() => <Profile auth={this.props.auth}/>} />}
-                        <Route exact path="/" render={() => <Home authenticated={this.state.authenticated} auth={this.props.auth}/>}/>
+                        <Route exact path="/books" render={(props) => <Tcbooks authenticated={this.state.authenticated} auth={auth} {...props}/>} />
+                        <Route exact path="/book/:id/:title" render={(props) => <Tcbook authenticated={this.state.authenticated} auth={auth} {...props}/>} />
+                        <Route path="/profile" render={(props) => (
+                          !auth.isAuthenticated() ? (
+                            <Redirect to="/"/>
+                          ) : (
+                            <Profile auth={auth} {...props} />
+                          )
+                        )} />
+                        <Route exact path="/callback" render={(props) => {
+                          return <Callback handleAuthentication={auth.handleAuthentication} {...props} />
+                        }}/>
+                        <Route exact path="/" render={(props) => auth.isAuthenticated() ? <Redirect to="/books"/> : <Home auth={auth} {...props}/>}/>
                         <Route exact component={Error} />
                       </Switch>
                 </div>

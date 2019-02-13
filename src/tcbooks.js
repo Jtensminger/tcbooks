@@ -4,9 +4,6 @@ import gql from "graphql-tag"
 import { Link } from "react-router-dom"
 import { Item, Segment, Responsive } from 'semantic-ui-react'
 
-
-// import Tcbook from "./tcbook"
-
 class Tcbooks extends Component {
   componentWillMount() {
     if(this.props.authenticated) {
@@ -26,28 +23,11 @@ class Tcbooks extends Component {
     }
   }
 
-  componentDidMount() {
-    if(this.props.authenticated) {
-      const { userProfile, getProfile } = this.props.auth;
-
-      if (!userProfile) {
-        getProfile((err, profile) => {
-          this.setState({ profile });
-        });
-      } else {
-        this.setState({ profile: userProfile });
-      }
-    } else {
-      this.setState({profile: null})
-    }
-  }
-
   render() {
-    const { profile } = this.state;
     let groupAccess = null
-    if (profile) {
-      if (profile.groups) {
-        groupAccess = Object.values(profile.groups)
+    if (this.props.auth.profile) {
+      if (this.props.auth.profile.groups) {
+        groupAccess = Object.values(this.props.auth.profile.groups)
       }
     }
 

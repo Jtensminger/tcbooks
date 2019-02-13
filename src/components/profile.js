@@ -23,9 +23,7 @@ const styles = {
 class Profile extends Component {
   componentWillMount() {
     this.setState({ profile: {} });
-
     const { userProfile, getProfile } = this.props.auth;
-
     if (!userProfile) {
       getProfile((err, profile) => {
         this.setState({ profile });
