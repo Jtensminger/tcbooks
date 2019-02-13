@@ -16,14 +16,13 @@ const auth = new Auth()
 // }
 
 ReactDOM.render(
-    <ContextProviderComponent>
+    // <ContextProviderComponent>
         <Theme.Consumer> 
         {tokens => (
             <App tokens={tokens} auth={auth}/> 
         )}  
-        </Theme.Consumer>
-    </ContextProviderComponent>, document.getElementById('root'));
-
+        </Theme.Consumer>, document.getElementById('root'));
+// </ContextProviderComponent>
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA

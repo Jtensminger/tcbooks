@@ -1,7 +1,7 @@
 import React from "react"
 import CommonMark from "commonmark"
 import ReactRenderer from "commonmark-react-renderer"
-import { Container, Header, Grid, Segment, List, Sticky, Rail, Divider } from 'semantic-ui-react'
+import { Container, Header, Grid, Segment, List, Sticky, Rail, Divider, Sidebar } from 'semantic-ui-react'
 import { Link } from "react-router-dom"
 // import Page, { Grid, GridColumn } from '@atlaskit/page';
 // import { colors } from '@atlaskit/theme';
@@ -59,7 +59,7 @@ class TcbookMarkdownRenderer extends React.Component {
   }
   // for generating the table of contents UI TODO:Move to components folder and import as component
   tableOfContentsUI = () => (
-    <List divided={true}>
+    <List divided={true} size={'medium'} relaxed={'very'}>
       {
         this.generateTableOfContentsData().map(heading => {
           return (
@@ -94,17 +94,6 @@ class TcbookMarkdownRenderer extends React.Component {
     <div ref={this.handleContextRef}>
       <Container>
         <Grid divided inverted stackable>
-            <Grid.Column width={4}>
-              <Rail close position="left">
-                <Sticky context={contextRef}>
-                  <Segment size={'large'}>
-                    <Header as='h3'>Contents</Header>
-                    {this.tableOfContentsUI()}
-                  </Segment>
-                </Sticky>
-              </Rail>
-            </Grid.Column>
-            
           <Grid.Column width={12}>
             <Header as='h1'>{tcbook.bookTitle}</Header>
             <Divider />
@@ -117,6 +106,16 @@ class TcbookMarkdownRenderer extends React.Component {
                 </div>
               }
           </Grid.Column>
+          <Grid.Column width={4}>
+              <Rail close position="right">
+                <Sticky context={contextRef}>
+                  <Segment size={'large'}>
+                    <Header as='h3'>Contents</Header>
+                    {this.tableOfContentsUI()}
+                  </Segment>
+                </Sticky>
+              </Rail>
+            </Grid.Column>
         </Grid>
       </Container>
     </div>
