@@ -2,18 +2,16 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom"
 import ApolloClient from "apollo-boost"
 import { ApolloProvider } from "react-apollo"
-// import history from "./components/history"
+import 'isomorphic-fetch'
 import Header from "./header"
 import Tcbooks from "./tcbooks"
 import Tcbook from "./tcbook"
 import SEO from "./seo"
 import Callback from "./callback"
 import Error from "./error"
-import ConsumerContext from "./provider"
 import Profile from "./components/profile"
 import Home from "./components/home"
 import styled from 'styled-components';
-// import '@atlaskit/css-reset';
 import './App.css';
 
 const client = new ApolloClient({
@@ -50,7 +48,7 @@ class App extends Component {
     super(props)
     this.state = {
       authenticated: null,
-      themeMode: props.tokens.mode
+      themeMode: 'light'
     }
   }
 
@@ -90,12 +88,11 @@ class App extends Component {
   render() {
     const { themeMode } = this.state
     const { auth } = this.props
-
     return (
         <Router>
           <ApolloProvider client={client}>
             <AppWrapper theme={themeMode === 'light' ? light : dark}>
-              <ConsumerContext>{ (context) => <Header context={context} auth={auth} themeMode={themeMode} switchTheme={this.switchTheme} />}</ConsumerContext>
+              <Header auth={auth} themeMode={themeMode} switchTheme={this.switchTheme} />
               <SEO title="Home" keywords={[`tradecraft`, `markdown`, `books`]} />
               <ContentWrapper>
                 <div>
@@ -124,8 +121,4 @@ class App extends Component {
   }
 }
 
-// margin: `0 auto`,
-// maxWidth: 960,
-// padding: `0px 1.0875rem 1.45rem`,
-// paddingTop: 0,
 export default App;

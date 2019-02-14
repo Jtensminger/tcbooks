@@ -12,6 +12,7 @@ class Tcbooks extends Component {
       const { userProfile, getProfile } = this.props.auth;
 
       if (!userProfile) {
+        console.log(this.props.auth)
         getProfile((err, profile) => {
           this.setState({ profile });
         });

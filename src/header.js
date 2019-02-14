@@ -24,7 +24,7 @@ const HeaderWrapper = styled.div`
   text-align: center;
 `
 
-const Header = ({ context, auth, themeMode }) => (
+const Header = ({auth, themeMode }) => (
   <header>
     <HeaderWrapper theme={themeMode === 'light' ? light : dark}>
       <h1 style={{ margin: 0 }}>
@@ -35,7 +35,7 @@ const Header = ({ context, auth, themeMode }) => (
             textDecoration: `none`,
           }}
         >
-          {context.data.siteTitle}
+          TCBook
         </Link>
       </h1>
       <Container text>
