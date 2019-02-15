@@ -48,6 +48,7 @@ class Tcbook extends Component {
           {({loading, error, data}) => {
             if (loading) return <p>Loading...</p>
             if (error) return <p>Error</p>
+            //TODO verify that data & data.tcBook exists
             if(!data.tcBook.groupAccess) return <TcbookMarkdownRenderer pathname={this.props.location.pathname} tcbook={data.tcBook} />
             
             if (!this.props.auth.profile) return <p>You don't have the correct group permission to see this book</p>

@@ -1,0 +1,42 @@
+{
+    "version": 2,
+    "name": "tcbooks",
+    "alias": ["embodied.host"],
+    "env": {
+        "REACT_APP_Auth_Callback": "https://embodied.host/callback",
+        "REACT_APP_Auth_Domain": "tradecraft.auth0.com",
+        "REACT_APP_Auth_ClientId": "kVTGVMolI4kV4dUMpKla5QtlKsgKEtPO",
+        "REACT_APP_GRAPHCMS": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXJzaW9uIjoxLCJ0b2tlbklkIjoiNTQzODllYzAtZGJiZi00OTRiLWE0YzAtMWMxZmE3MjQwYjlmIn0.1ty4Q4GNrRznl-06fTrssq-zgGHyqFTfG7XfggD9hd0",
+        "REACT_APP_Auth_Role_URL": "https://embodied.host/claims/roles",
+        "REACT_APP_Auth_Permission_URL": "https://embodied.host/claims/permissions",
+        "REACT_APP_Auth_Group_URL": "https://embodied.host/claims/groups"
+    },
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@now/static-build",
+        "config": { "distDir": "build" }
+      }
+    ],
+    "routes": [
+      {
+        "src": "^/static/(.*)",
+        "headers": { "cache-control": "s-maxage=31536000,immutable" },
+        "dest": "/static/$1"
+      },
+      { "src": "^/favicon.ico", "dest": "/favicon.ico" },
+      { "src": "^/asset-manifest.json", "dest": "/asset-manifest.json" },
+      { "src": "^/manifest.json", "dest": "/manifest.json" },
+      { "src": "^/precache-manifest.(.*)", "dest": "/precache-manifest.$1" },
+      {
+        "src": "^/service-worker.js",
+        "headers": { "cache-control": "s-maxage=0" },
+        "dest": "/service-worker.js"
+      },
+      {
+        "src": "^/(.*)",
+        "headers": { "cache-control": "s-maxage=0" },
+        "dest": "/index.html"
+      }
+    ]
+  }

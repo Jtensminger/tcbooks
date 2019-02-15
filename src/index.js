@@ -12,12 +12,13 @@ const auth = new Auth()
 //     auth.handleAuthentication();
 //   }
 // }
-const rootElement = document.getElementById('root');
-if (rootElement.hasChildNodes()) {
-    hydrate(<App auth={auth}/>, rootElement);
-  } else {
-    render(<App auth={auth}/>, rootElement);
-}
+render(<App auth={auth} />, document.getElementById('root'))
+// const rootElement = document.getElementById('root');
+// if (rootElement.hasChildNodes()) {
+//     hydrate(<App auth={auth}/>, rootElement);
+//   } else {
+//     render(<App auth={auth}/>, rootElement);
+// }
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
