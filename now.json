@@ -1,8 +1,9 @@
 {
     "version": 2,
     "name": "tcbooks",
-    "alias": ["embodied.host"],
+    "alias": "embodied.host",
     "env": {
+        "NODE_ENV": "production",
         "REACT_APP_Auth_Callback": "https://embodied.host/callback",
         "REACT_APP_Auth_Domain": "tradecraft.auth0.com",
         "REACT_APP_Auth_ClientId": "kVTGVMolI4kV4dUMpKla5QtlKsgKEtPO",
